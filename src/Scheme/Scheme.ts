@@ -1,8 +1,10 @@
 import AbstractScheme from "./AbstracrScheme";
+import NumberScheme from "./NumberScheme";
 
 export default class Scheme extends AbstractScheme {
     currentValue: any;
     isError: boolean = false;
+    // readonly number = new NumberScheme();
 
     constructor(cv?: any) {
         super();
@@ -11,31 +13,25 @@ export default class Scheme extends AbstractScheme {
         }
     }
 
-    number(val) {
-        if(typeof val === 'number'){
-            this.currentValue = val;
-            return val;
-        } else if(typeof val === 'number' && val === +val){
-            this.currentValue = val;
-            return Number(val);
-        } else {
-            this.isError = true;
-            throw new Error('Value is not a number')
-        }
-    }
+    number() {
+        return new NumberScheme();
+     }
 }
 
 
 const scheme = new Scheme();
 const userScheme = scheme.create({
     age: scheme.number().min(10).max(90),
+    count: scheme.number().min(1000).max(90000),
+    ggwp: scheme.number().notOneOf([1,2,3,4,5])
 });
 
 userScheme.validate({
-    name: 'Andrey',
-    age: 33
+    age: 33,
+    count: 1500,
+    ggwp: 6,
 });
 
-for (const el of scheme.values){
-    console.log(el)
-}
+// for (const el of scheme.values){
+//     console.log(el.value.numberObj)
+// }
