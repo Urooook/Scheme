@@ -52,7 +52,7 @@ export default class NumberScheme {
                 }
                 return new NumberScheme(this.numberObj)
         } else {
-            throw new Error('Max error')
+            throw new Error('Not a number')
         }
     }
 

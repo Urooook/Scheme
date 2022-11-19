@@ -42,20 +42,22 @@ export default abstract class AbstractScheme {
         // console.log(elem)
         if(elem.type === 'number'){
             const numberValidator = new NumberScheme();
-            for(const el in elem){
+            for (const el in elem) {
                 console.log(el)
                 console.log(elem[el])
-                try{
-                    if(el !== 'type'){
+                if (el !== 'type') {
+                    try {
                         const isValidate = numberValidator[el](elem[el], realValue);
-                        if(!isValidate){
+                        if (!isValidate) {
                             this.errors.push('Error')
                             console.log('Error')
                         }
+
+                    } catch (err) {
+                        // console.log(err);
+                        this.errors.push(err);
+                        console.log(this.errors)
                     }
-                } catch (err){
-                    console.log(err);
-                    this.errors.push(err);
                 }
             }
             console.log(this.errors)

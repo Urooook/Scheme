@@ -23,7 +23,7 @@ const scheme = new Scheme();
 const userScheme = scheme.create({
     age: scheme.number().min(10).max(90),
     count: scheme.number().min(1000).max(90000),
-    ggwp: scheme.number().notOneOf([1,2,3,4,5])
+    ggwp: scheme.number().notOneOf([1,2,3,4,5]).min(2).max(7)
 });
 
 userScheme.validate({
