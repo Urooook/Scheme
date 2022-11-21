@@ -1,14 +1,22 @@
-import Scheme from "./Scheme";
+import {ValuesObjectNumberElementType} from "./AbstracrScheme";
 
 export default class NumberScheme {
-    numberObj: any = {
+    rulesObj: NumberSchemeObjectType = {
         type: 'number',
+        *[Symbol.iterator](): Generator<ValuesObjectNumberElementType> {
+            const keys = Object.keys(this);
+            for(const key of keys) {
+                yield {
+                    key,
+                    value: this[key],
+                }
+            }
+        },
     };
 
     constructor(obj?: any) {
-        // super();
         if(obj){
-            this.numberObj = obj
+            this.rulesObj = obj
         }
     }
 
@@ -23,12 +31,12 @@ export default class NumberScheme {
                     throw new Error('Min error')
                 }
             } else {
-                this.numberObj = {
-                    ...this.numberObj,
+                this.rulesObj = {
+                    ...this.rulesObj,
                     min: val,
                 }
+                return new NumberScheme(this.rulesObj)
             }
-            return new NumberScheme(this.numberObj)
         } else {
             throw new Error('Must be number')
         }
@@ -45,12 +53,12 @@ export default class NumberScheme {
                         throw new Error('Max error')
                     }
                 } else {
-                    this.numberObj = {
-                        ...this.numberObj,
+                    this.rulesObj = {
+                        ...this.rulesObj,
                         max: val,
                     }
+                    return new NumberScheme(this.rulesObj)
                 }
-                return new NumberScheme(this.numberObj)
         } else {
             throw new Error('Not a number')
         }
@@ -68,14 +76,173 @@ export default class NumberScheme {
                 for (let i = 0; i < value.length; i++) {
                     if (typeof value[i] !== "number") throw new Error('Array must consist of numbers')
                 }
-                this.numberObj = {
-                    ...this.numberObj,
+                console.log('this.numberObj', this.rulesObj)
+                this.rulesObj = {
+                    ...this.rulesObj,
                     notOneOf: value,
                 }
             }
-            return new NumberScheme(this.numberObj)
+            return new NumberScheme(this.rulesObj)
         } else {
             throw new Error('Not Array');
         }
     }
+
+    positive(): NumberScheme;
+    positive(realValue: number): boolean;
+    positive(realValue?: number): boolean | NumberScheme {
+        if(realValue){
+            if(realValue > 0) {
+                return true;
+            } else {
+                throw new Error('Positive error')
+            }
+        } else {
+            this.rulesObj = {
+                ...this.rulesObj,
+                positive: true,
+            }
+            return new NumberScheme(this.rulesObj)
+        }
+    }
+
+    negative(): NumberScheme;
+    negative(realValue: number): boolean;
+    negative(realValue?: number): boolean | NumberScheme {
+        if(realValue){
+            if(realValue < 0) {
+                return true;
+            } else {
+                throw new Error('Negative error')
+            }
+        } else {
+            this.rulesObj = {
+                ...this.rulesObj,
+                negative: true,
+            }
+            return new NumberScheme(this.rulesObj)
+        }
+    }
+
+    moreThen(val: number): NumberScheme;
+    moreThen(val: number, realValue: number): boolean;
+    moreThen(val: number, realValue?: number): boolean | NumberScheme {
+        if(typeof val === 'number') {
+            if(realValue){
+                if(realValue > val) {
+                    return true;
+                } else {
+                    throw new Error(`This value less then ${val}`)
+                }
+            } else {
+                this.rulesObj = {
+                    ...this.rulesObj,
+                    moreThen: val,
+                }
+                return new NumberScheme(this.rulesObj)
+            }
+        } else {
+            throw new Error('Not a number')
+        }
+    }
+
+    lessThen(val: number): NumberScheme;
+    lessThen(val: number, realValue: number): boolean;
+    lessThen(val: number, realValue?: number): boolean | NumberScheme {
+        if(typeof val === 'number') {
+            if(realValue){
+                if(realValue < val) {
+                    return true;
+                } else {
+                    throw new Error(`This value more then ${val}`)
+                }
+            } else {
+                this.rulesObj = {
+                    ...this.rulesObj,
+                    lessThen: val,
+                }
+                return new NumberScheme(this.rulesObj)
+            }
+        } else {
+            throw new Error('Not a number')
+        }
+    }
+
+    isInteger(): NumberScheme;
+    isInteger(realValue: number): boolean;
+    isInteger(realValue?: number): boolean | NumberScheme {
+        if(realValue){
+            if(Number.isInteger(realValue)) {
+                return true;
+            } else {
+                throw new Error('Integer error')
+            }
+        } else {
+            this.rulesObj = {
+                ...this.rulesObj,
+                isInteger: true,
+            }
+            return new NumberScheme(this.rulesObj)
+        }
+    }
+
+    isFloat(): NumberScheme;
+    isFloat(realValue: number): boolean;
+    isFloat(realValue?: number): boolean | NumberScheme {
+        if(realValue){
+            if(!Number.isInteger(realValue)) {
+                return true;
+            } else {
+                throw new Error('Float error')
+            }
+        } else {
+            this.rulesObj = {
+                ...this.rulesObj,
+                isFloat: true,
+            }
+            return new NumberScheme(this.rulesObj)
+        }
+    }
+
+    checkIsUnique(func: () => Promise<void | Response | any>): NumberScheme;
+    checkIsUnique(func: () => Promise<void | Response | any>, realValue: number): Promise<any>;
+    checkIsUnique(func: () => Promise<void | Response | any>, realValue?: number): Promise<any> | NumberScheme {
+       if(realValue) {
+           return new Promise((resolve) => {
+               func().then((data) => resolve(data));
+           }).then((res) => {
+               console.log('res2', res)
+               if(Boolean(res) === true){
+                   return true;
+               } else {
+                   throw new Error('Value is not unique')
+               }
+           }).catch((error) => console.log(error)).finally(() => new NumberScheme());
+       } else {
+           this.rulesObj = {
+               ...this.rulesObj,
+               checkIsUnique: func,
+           }
+           // console.log(' this.numberObj',  this.numberObj)
+           return new NumberScheme(this.rulesObj)
+       }
+    }
+}
+
+export type PartialNumberScheme = Record<string, NumberScheme> & {
+    [Symbol.iterator](): Generator<ValuesObjectNumberElementType>
+}
+export type NumberSchemeObjectType = {
+    type: 'number'
+    min?: number
+    max?: number
+    notOneOf?: number[]
+    positive?: boolean
+    negative?: boolean
+    moreThen?: number
+    lessThen?: number
+    isInteger?: boolean
+    isFloat?: boolean
+    checkIsUnique?: () => Promise<void | Response | any>
+    [Symbol.iterator](): Generator
 }

@@ -1,37 +1,44 @@
 import AbstractScheme from "./AbstracrScheme";
 import NumberScheme from "./NumberScheme";
+import StringScheme from "./StringScheme/StringScheme";
 
 export default class Scheme extends AbstractScheme {
-    currentValue: any;
-    isError: boolean = false;
-    // readonly number = new NumberScheme();
-
-    constructor(cv?: any) {
+    constructor() {
         super();
-        if(cv){
-            this.currentValue = cv;
-        }
     }
 
     number() {
         return new NumberScheme();
+     }
+
+     string() {
+        return new StringScheme();
      }
 }
 
 
 const scheme = new Scheme();
 const userScheme = scheme.create({
-    age: scheme.number().min(10).max(90),
-    count: scheme.number().min(1000).max(90000),
-    ggwp: scheme.number().notOneOf([1,2,3,4,5]).min(2).max(7)
+    // age: scheme.number().notOneOf([1,2,3,4,5]).min(2).max(10).positive().checkIsUnique(() => {
+    //     return new Promise((resolve) => {
+    //         setTimeout(() => {
+    //             resolve(true);
+    //         }, 1000)
+    //     })
+    // }).isInteger(),
+    name: scheme.string().min(3).max(5)
+    // count: scheme.number().max(90000).min(-2).negative(),
+    // ggwp: scheme.number().notOneOf([1,2,3,4,5]).min(2).max(10),
+    // ggp: scheme.number().notOneOf([1,2,3,4,5])
 });
 
 userScheme.validate({
-    age: 33,
-    count: 1500,
-    ggwp: 6,
+    // age: 3,
+    name: '1df1'
+     // count: -1,
+    // ggwp: 6,
+    // ggp: 6,
 });
 
-// for (const el of scheme.values){
-//     console.log(el.value.numberObj)
-// }
+
+console.log(userScheme.errors)
