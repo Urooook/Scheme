@@ -21,12 +21,12 @@ export default class NumberScheme {
     }
 
     min(val: number): NumberScheme;
-    min(val: number, realValue: number): boolean;
-    min(val: number, realValue?: number): boolean | NumberScheme {
+    min(val: number, realValue: number): number;
+    min(val: number, realValue?: number): number | NumberScheme {
         if(typeof val === 'number') {
             if(realValue) {
                 if(realValue > val) {
-                    return true;
+                    return realValue;
                 } else {
                     throw new Error('Min error')
                 }
@@ -43,12 +43,12 @@ export default class NumberScheme {
     }
 
     max(val: number): NumberScheme;
-    max(val: number, realValue: number): boolean;
-    max(val: number, realValue?: number): boolean | NumberScheme {
+    max(val: number, realValue: number): number;
+    max(val: number, realValue?: number): number | NumberScheme {
         if(typeof val === 'number') {
                 if(realValue){
                     if(realValue < val) {
-                        return true;
+                        return realValue;
                     } else {
                         throw new Error('Max error')
                     }
@@ -65,13 +65,14 @@ export default class NumberScheme {
     }
 
     notOneOf(value: number[]): NumberScheme;
-    notOneOf(value: number[], realValue: number): boolean;
-    notOneOf(value: number[], realValue?: number): boolean | NumberScheme {
+    notOneOf(value: number[], realValue: number): number;
+    notOneOf(value: number[], realValue?: number): number | NumberScheme {
         if (value.length > -1) {
             if (realValue) {
                 for (let i = 0; i < value.length; i++) {
-                    if (value[i] === realValue) return false;
+                    if (value[i] === realValue) throw new Error('Array includes value');
                 }
+                return realValue;
             } else {
                 for (let i = 0; i < value.length; i++) {
                     if (typeof value[i] !== "number") throw new Error('Array must consist of numbers')
@@ -89,11 +90,11 @@ export default class NumberScheme {
     }
 
     positive(): NumberScheme;
-    positive(realValue: number): boolean;
-    positive(realValue?: number): boolean | NumberScheme {
+    positive(realValue: number): number;
+    positive(realValue?: number): number | NumberScheme {
         if(realValue){
             if(realValue > 0) {
-                return true;
+                return realValue;
             } else {
                 throw new Error('Positive error')
             }
@@ -107,11 +108,11 @@ export default class NumberScheme {
     }
 
     negative(): NumberScheme;
-    negative(realValue: number): boolean;
-    negative(realValue?: number): boolean | NumberScheme {
+    negative(realValue: number): number;
+    negative(realValue?: number): number | NumberScheme {
         if(realValue){
             if(realValue < 0) {
-                return true;
+                return realValue;
             } else {
                 throw new Error('Negative error')
             }
@@ -125,12 +126,12 @@ export default class NumberScheme {
     }
 
     moreThen(val: number): NumberScheme;
-    moreThen(val: number, realValue: number): boolean;
-    moreThen(val: number, realValue?: number): boolean | NumberScheme {
+    moreThen(val: number, realValue: number): number;
+    moreThen(val: number, realValue?: number): number | NumberScheme {
         if(typeof val === 'number') {
             if(realValue){
                 if(realValue > val) {
-                    return true;
+                    return realValue;
                 } else {
                     throw new Error(`This value less then ${val}`)
                 }
@@ -147,12 +148,12 @@ export default class NumberScheme {
     }
 
     lessThen(val: number): NumberScheme;
-    lessThen(val: number, realValue: number): boolean;
-    lessThen(val: number, realValue?: number): boolean | NumberScheme {
+    lessThen(val: number, realValue: number): number;
+    lessThen(val: number, realValue?: number): number | NumberScheme {
         if(typeof val === 'number') {
             if(realValue){
                 if(realValue < val) {
-                    return true;
+                    return realValue;
                 } else {
                     throw new Error(`This value more then ${val}`)
                 }
@@ -169,11 +170,11 @@ export default class NumberScheme {
     }
 
     isInteger(): NumberScheme;
-    isInteger(realValue: number): boolean;
-    isInteger(realValue?: number): boolean | NumberScheme {
+    isInteger(realValue: number): number;
+    isInteger(realValue?: number): number | NumberScheme {
         if(realValue){
             if(Number.isInteger(realValue)) {
-                return true;
+                return realValue;
             } else {
                 throw new Error('Integer error')
             }
@@ -187,11 +188,11 @@ export default class NumberScheme {
     }
 
     isFloat(): NumberScheme;
-    isFloat(realValue: number): boolean;
-    isFloat(realValue?: number): boolean | NumberScheme {
+    isFloat(realValue: number): number;
+    isFloat(realValue?: number): number | NumberScheme {
         if(realValue){
             if(!Number.isInteger(realValue)) {
-                return true;
+                return realValue;
             } else {
                 throw new Error('Float error')
             }
@@ -217,7 +218,7 @@ export default class NumberScheme {
                } else {
                    throw new Error('Value is not unique')
                }
-           }).catch((error) => console.log(error)).finally(() => new NumberScheme());
+           }).catch((error) => console.log(error));
        } else {
            this.rulesObj = {
                ...this.rulesObj,

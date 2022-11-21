@@ -22,13 +22,14 @@ export default class StringScheme {
     }
 
     min(val: number): StringScheme;
-    min(val: number, realValue: string): boolean;
-    min(val: number, realValue?: string): boolean | StringScheme {
+    min(val: number, realValue: string): string;
+    min(val: number, realValue?: string): string | StringScheme {
         console.log(val);
         if(typeof val === "number") {
             if(realValue) {
+                console.log(123)
                 if(realValue.length > val) {
-                    return true;
+                    return realValue;
                 } else {
                     throw new Error('Min error')
                 }
@@ -45,12 +46,34 @@ export default class StringScheme {
     }
 
     max(val: number): StringScheme;
-    max(val: number, realValue: string): boolean;
-    max(val: number, realValue?: string): boolean | StringScheme {
+    max(val: number, realValue: string): string;
+    max(val: number, realValue?: string): string | StringScheme {
         if(typeof val === "number") {
             if(realValue){
                 if(realValue.length < val) {
-                    return true;
+                    return realValue;
+                } else {
+                    throw new Error('Max error')
+                }
+            } else {
+                this.rulesObj = {
+                    ...this.rulesObj,
+                    max: val,
+                }
+                return new StringScheme(this.rulesObj)
+            }
+        } else {
+            throw new Error('Not a number')
+        }
+    }
+
+    matches(val: RegExp): StringScheme;
+    matches(val: RegExp, realValue: string): string;
+    matches(val: RegExp, realValue?: string): string | StringScheme {
+        if(val) {
+            if(realValue){
+                if(realValue.length < val) {
+                    return realValue;
                 } else {
                     throw new Error('Max error')
                 }
@@ -99,13 +122,6 @@ export type StringSchemeObjectType = {
     type: 'string'
     min?: number
     max?: number
-    notOneOf?: number[]
-    positive?: boolean
-    negative?: boolean
-    moreThen?: number
-    lessThen?: number
-    isInteger?: boolean
-    isFloat?: boolean
     checkIsUnique?: () => Promise<void | Response | any>
     [Symbol.iterator](): Generator
 }

@@ -1,5 +1,5 @@
 import NumberScheme, {NumberSchemeObjectType, PartialNumberScheme} from "./NumberScheme";
-import StringScheme from "./StringScheme/StringScheme";
+import StringScheme, {StringSchemeObjectType} from "./StringScheme/StringScheme";
 
 export type ValuesObjectNumberElementType = {
     key: string
@@ -50,32 +50,45 @@ export default abstract class AbstractScheme {
         }
     }
 
-    #test(elem: NumberSchemeObjectType, realValue: number | string): void {
+    #test(elem: NumberSchemeObjectType | StringSchemeObjectType, realValue: number | string): void {
         // console.log(elem)
-        if (elem.type === 'number' || elem.type === 'string') {
-            // console.log(elem)
-            const numberValidator = new NumberScheme();
-            const iterator = elem[Symbol.iterator]();
-            let result = iterator.next()
-            while (!result.done) {
-                console.log(result);
-                result = iterator.next()
-                const value: ValuesObjectNumberElementType = result.value;
-
-                if (value && value.key !== 'type') {
-                    new Promise((resolve) => {
-                        const result1 = typeof elem[value.key] === 'boolean' ? numberValidator[value.key](realValue) : numberValidator[value.key](elem[value.key], realValue);
-                        console.log('result1', result1)
-                        resolve(result1);
-                    })
-                        .then((res) => console.log('res', res))
-                        .catch((err) => {
-                            this.errors.push(err);
-                            console.log('Errors', this.errors)
-                        })
-                }
+        let Validator: NumberScheme | StringScheme;
+        switch (elem.type) {
+            case 'number': {
+                Validator = new NumberScheme();
+                break;
             }
-            console.log(this.errors)
+                ;
+            case 'string': {
+                Validator = new StringScheme();
+                break;
+            }
+            default: {
+                throw new Error('Unknown type');
+            }
         }
+        // console.log(elem)
+        const numberValidator = Validator;
+        const iterator = elem[Symbol.iterator]();
+        let result = iterator.next()
+        while (!result.done) {
+            // console.log(result);
+            result = iterator.next()
+            const value: ValuesObjectNumberElementType = result.value;
+            // console.log('realValue', realValue)
+            if (value && value.key !== 'type') {
+                new Promise((resolve) => {
+                    const result1 = typeof elem[value.key] === 'boolean' ? numberValidator[value.key](realValue) : numberValidator[value.key](elem[value.key], realValue);
+                    console.log('result1', result1)
+                    resolve(result1);
+                })
+                    .then((res) => console.log('res', res))
+                    .catch((err) => {
+                        this.errors.push(err);
+                        console.log('Errors', this.errors)
+                    })
+            }
+        }
+        console.log(this.errors)
     }
 }
