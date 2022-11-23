@@ -42,39 +42,3 @@ export default class Scheme extends AbstractScheme {
         return this;
     }
 }
-
-
-const scheme = new Scheme();
-const userScheme = scheme.create({
-     age: scheme.number().max(1000).min(10),
-    arr: scheme.optional().iterable().lengthMoreThen(8).has('b12dla'),
-    // name: scheme.string().min(3).max(9).matches(/^[\w$]+$/g).isUpperCase()
-    name: scheme.optional().string().isTrimmed().email().min(5).max(6).checkIsUnique(() => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(false);
-        }, 1000)
-    })
-}).isLowerCase(),
-//     val: scheme.boolean().isFalse()
-});
-const a = new Set();
-a.add('bla');
-a.add('fla');
-a.add('ala');
-a.add([1,2,3])
-userScheme.validate({
-     age: 23,
-    name: '12.12.1212',
-    // arr: a,
-    // name: 'kot@sd.ru',
-    val: false
-     // count: -1,
-    // ggwp: 6,
-    // ggp: 6,
-})
-     .then((res) => console.log('Then', res));
-
-// new Promise((resolve) => {
-//     resolve(new BooleanScheme().isTrue(false));
-// }).then((res) => console.log('qqqq', res))

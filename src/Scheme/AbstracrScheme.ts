@@ -44,7 +44,6 @@ export default abstract class AbstractScheme {
     validate(obj: Record<string, number | string | any>) {
         const keys = Object.keys(obj);
         const promises: Array<Promise<void | any>> = [];
-        console.log('keys', keys)
         for (const el of this.values) {
             this.errors[el.key] = [];
             if (keys.indexOf(el.key) !== -1) {
@@ -98,7 +97,6 @@ export default abstract class AbstractScheme {
         while (!result.done) {
             result = iterator.next()
             const value: ValuesObjectNumberElementType = result.value;
-            // console.log('value', value)
             if (value && value.key !== 'type' && value.key !== 'optional' && elem.type === (typeof realValue === "object" ? "iterable" : `${typeof realValue}`)) {
                 const test = new Promise((resolve) => {
                     const res = typeof elem[value.key] === 'boolean' ? Validator[value.key](realValue) : Validator[value.key](elem[value.key], realValue);

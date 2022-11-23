@@ -23,7 +23,6 @@ export default class NumberScheme {
                 ...this.rulesObj,
                 ...obj
             }
-            // console.log('this.rules', this.rulesObj)
         }
     }
 
@@ -84,7 +83,6 @@ export default class NumberScheme {
                 for (let i = 0; i < value.length; i++) {
                     if (typeof value[i] !== "number") throw new Error('Array must consist of numbers')
                 }
-                console.log('this.numberObj', this.rulesObj)
                 this.rulesObj = {
                     ...this.rulesObj,
                     notOneOf: value,
@@ -219,7 +217,6 @@ export default class NumberScheme {
            return new Promise((resolve) => {
                func().then((data) => resolve(data));
            }).then((res) => {
-               console.log('res3', res)
                if(Boolean(res) === true){
                    return realValue;
                } else {
@@ -231,7 +228,6 @@ export default class NumberScheme {
                ...this.rulesObj,
                checkIsUnique: func,
            }
-           // console.log(' this.numberObj',  this.numberObj)
            return new NumberScheme(this.rulesObj)
        }
     }

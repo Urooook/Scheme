@@ -235,7 +235,6 @@ export default class StringScheme {
             return new Promise((resolve) => {
                 func().then((data) => resolve(data));
             }).then((res) => {
-                console.log('res2', res)
                 if(Boolean(res) === true){
                     return realValue;
                 } else {
