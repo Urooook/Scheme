@@ -1,6 +1,10 @@
 # NumberScheme
 NumberScheme - это класс для валидации числовых данных. 
 Ниже представлены методы этого класса:
+- Для проверки уникальности значения. Первым аргументом принимает callback функцию, которая возвращает Promise
+```ts
+checkIsUnique(func: () => Promise<void | Response | any>, realValue?: number): Promise<any> | NumberScheme 
+```
 - Для установки минимального порога 
 ```ts
 min(val: number, realValue?: number): number | NumberScheme 
