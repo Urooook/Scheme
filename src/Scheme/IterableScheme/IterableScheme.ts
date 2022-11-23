@@ -1,8 +1,11 @@
 import {ValuesObjectNumberElementType} from "../AbstracrScheme";
+import {Optional} from "../types/types";
+import {IterableSchemeObjectType} from "./iterableTypes";
 
 export default class IterableScheme {
     rulesObj: IterableSchemeObjectType = {
         type: 'iterable',
+        optional: false,
         * [Symbol.iterator](): Generator<ValuesObjectNumberElementType> {
             const keys = Object.keys(this);
             for (const key of keys) {
@@ -14,9 +17,12 @@ export default class IterableScheme {
         },
     };
 
-    constructor(obj?: IterableSchemeObjectType) {
+    constructor(obj?: IterableSchemeObjectType | Optional) {
         if (obj) {
-            this.rulesObj = obj
+            this.rulesObj = {
+                ...this.rulesObj,
+                ...obj
+            }
         }
     }
 
@@ -137,13 +143,4 @@ export default class IterableScheme {
             throw new Error('Must be number')
         }
     }
-}
-
-export type IterableSchemeObjectType = {
-    type: 'iterable'
-    min?: number
-    max?: number
-    lengthMoreThen?: number
-    has?: number | string
-    [Symbol.iterator](): Generator
 }

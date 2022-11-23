@@ -1,7 +1,13 @@
-import NumberScheme, {NumberSchemeObjectType, PartialNumberScheme} from "./NumberScheme";
-import StringScheme, {StringSchemeObjectType} from "./StringScheme/StringScheme";
-import IterableScheme, {IterableSchemeObjectType} from "./IterableScheme/IterableScheme";
-import BooleanScheme, {BooleanSchemeObjectType} from "./BooleanScheme/BooleanScheme";
+import NumberScheme from "./NumberScheme/NumberScheme";
+import {StringSchemeObjectType} from "./StringScheme/stringTypes";
+import {BooleanSchemeObjectType} from "./BooleanScheme/boolTypes";
+import BooleanScheme from "./BooleanScheme/BooleanScheme";
+import IterableScheme from "./IterableScheme/IterableScheme";
+import {IterableSchemeObjectType} from "./IterableScheme/iterableTypes";
+import StringScheme from "./StringScheme/StringScheme";
+import {PartialScheme, SchemeContract, ValidatorTypes} from "./types/types";
+import {NumberSchemeObjectType} from "./NumberScheme/numberTypes";
+
 
 export type ValuesObjectNumberElementType = {
     key: string
@@ -9,13 +15,13 @@ export type ValuesObjectNumberElementType = {
 }
 
 export default abstract class AbstractScheme {
-    values: PartialNumberScheme;
+    values: PartialScheme;
     errors = [];
 
-    protected constructor() {}
+    protected constructor() {
+    }
 
-    create(obj: Record<string, NumberScheme | StringScheme | IterableScheme | BooleanScheme>): AbstractScheme {
-        console.log(obj)
+    create(obj: Record<string, SchemeContract>): AbstractScheme {
         const valuesObject = {
             ...obj,
             * [Symbol.iterator](): Generator<ValuesObjectNumberElementType> {
@@ -37,13 +43,23 @@ export default abstract class AbstractScheme {
 
     validate(obj: Record<string, number | string | any>) {
         const keys = Object.keys(obj);
-        const promises: Array<Promise<void>> = [];
-
+        const promises: Array<Promise<void | any>> = [];
+        console.log('keys', keys)
         for (const el of this.values) {
+            this.errors[el.key] = [];
             if (keys.indexOf(el.key) !== -1) {
-                this.errors[el.key] = [];
                 const testPromises = this.#test(el.value.rulesObj, obj[el.key], el.key);
                 promises.push(...testPromises)
+            } else {
+                if (!el.value.rulesObj.optional) {
+                    const undErr = Promise.reject(`${el.key} is required`).catch((err) => {
+                        this.errors[el.key].push({
+                            key: 'Required',
+                            error: err,
+                        });
+                    });
+                    promises.push(undErr);
+                }
             }
         }
         return Promise.all(promises).then(() => {
@@ -53,21 +69,21 @@ export default abstract class AbstractScheme {
 
     #test(elem: NumberSchemeObjectType | StringSchemeObjectType | IterableSchemeObjectType | BooleanSchemeObjectType, realValue: number | string, key: string): Array<Promise<void>> {
         let Validator: NumberScheme | StringScheme | IterableScheme | BooleanScheme;
-        // console.log('elem', elem)
+
         switch (elem.type) {
-            case 'number': {
+            case ValidatorTypes.number: {
                 Validator = new NumberScheme();
                 break;
             };
-            case 'string': {
+            case ValidatorTypes.string: {
                 Validator = new StringScheme();
                 break;
             }
-            case 'iterable': {
+            case ValidatorTypes.iterable: {
                 Validator = new IterableScheme();
                 break;
             }
-            case "boolean": {
+            case ValidatorTypes.boolean: {
                 Validator = new BooleanScheme();
                 break;
             }
@@ -75,32 +91,36 @@ export default abstract class AbstractScheme {
                 throw new Error('Unknown type');
             }
         }
-        // console.log(elem)
 
         const iterator = elem[Symbol.iterator]();
         let result = iterator.next()
         const testPromises = [];
         while (!result.done) {
-            // console.log(result);
             result = iterator.next()
-            // console.log(result)
             const value: ValuesObjectNumberElementType = result.value;
-            // console.log('realValue', realValue)
-            if (value && value.key !== 'type') {
-                 const test = new Promise( (resolve) => {
-                    const result1 = typeof elem[value.key] === 'boolean' ? Validator[value.key](realValue) : Validator[value.key](elem[value.key], realValue);
-                    // console.log('result1', result1)
-                    resolve(result1);
+            // console.log('value', value)
+            if (value && value.key !== 'type' && value.key !== 'optional' && elem.type === (typeof realValue === "object" ? "iterable" : `${typeof realValue}`)) {
+                const test = new Promise((resolve) => {
+                    const res = typeof elem[value.key] === 'boolean' ? Validator[value.key](realValue) : Validator[value.key](elem[value.key], realValue);
+                    resolve(res);
                 })
-                    // .then((res) => console.log('res', res))
                     .catch((err) => {
                         this.errors[key].push({
                             key: value.key,
                             error: err,
                         });
-                        // console.log('WWWWWWWWWWWWWWWWWWWWW',this.errors)
                     });
-                 testPromises.push(test)
+                testPromises.push(test)
+            } else {
+                if (elem.type !== (typeof realValue === "object" ? "iterable" : `${typeof realValue}`)) {
+                    const typeError = Promise.reject('Inconsistent types in the creation and validation schema').catch((err) => {
+                        this.errors[key].push({
+                            key: 'TypeError',
+                            error: err,
+                        });
+                    });
+                    testPromises.push(typeError);
+                }
             }
         }
         return testPromises;

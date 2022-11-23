@@ -1,8 +1,11 @@
 import {ValuesObjectNumberElementType} from "../AbstracrScheme";
+import {Optional} from "../types/types";
+import {BooleanSchemeObjectType} from "./boolTypes";
 
 export default class BooleanScheme {
     rulesObj: BooleanSchemeObjectType = {
         type: 'boolean',
+        optional: false,
         * [Symbol.iterator](): Generator<ValuesObjectNumberElementType> {
             const keys = Object.keys(this);
             for (const key of keys) {
@@ -14,9 +17,12 @@ export default class BooleanScheme {
         },
     };
 
-    constructor(obj?: BooleanSchemeObjectType) {
+    constructor(obj?: BooleanSchemeObjectType | Optional) {
         if (obj) {
-            this.rulesObj = obj
+            this.rulesObj = {
+                ...this.rulesObj,
+                ...obj
+            }
         }
     }
 
@@ -55,11 +61,4 @@ export default class BooleanScheme {
             return new BooleanScheme(this.rulesObj)
         }
     }
-}
-
-export type BooleanSchemeObjectType = {
-    type: 'boolean'
-    isTrue?: boolean
-    isFalse?: boolean
-    [Symbol.iterator](): Generator
 }

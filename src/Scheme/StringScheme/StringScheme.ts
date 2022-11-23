@@ -1,5 +1,7 @@
 import {ValuesObjectNumberElementType} from "../AbstracrScheme";
-import NumberScheme from "../NumberScheme";
+import NumberScheme from "../NumberScheme/NumberScheme";
+import {Optional} from "../types/types";
+import {StringSchemeObjectType} from "./stringTypes";
 
 
 export type Nullable<T> = T | null;
@@ -7,6 +9,7 @@ export type Nullable<T> = T | null;
 export default class StringScheme {
     rulesObj: StringSchemeObjectType = {
         type: 'string',
+        optional: false,
         *[Symbol.iterator](): Generator<ValuesObjectNumberElementType> {
             const keys = Object.keys(this);
             for(const key of keys) {
@@ -34,19 +37,20 @@ export default class StringScheme {
     private urlRegExp =  /^((https?|ftp):)?\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
     private dateRegExp = /(\d{2}\.){2}(\d{4}| \d{2})(?!\d)/
 
-    constructor(obj?: StringSchemeObjectType) {
+    constructor(obj?: StringSchemeObjectType | Optional) {
         if(obj){
-            this.rulesObj = obj
+            this.rulesObj = {
+                ...this.rulesObj,
+                ...obj
+            }
         }
     }
 
     min(val: number): StringScheme;
     min(val: number, realValue: string): string;
     min(val: number, realValue?: string): string | StringScheme {
-        console.log(val);
         if(typeof val === "number") {
             if(realValue) {
-                console.log(123)
                 if(realValue.length > val) {
                     return realValue;
                 } else {
@@ -304,19 +308,4 @@ export default class StringScheme {
 
 export type PartialStringScheme = Record<string, StringScheme> & {
     [Symbol.iterator](): Generator<StringSchemeObjectType>
-}
-export type StringSchemeObjectType = {
-    type: 'string'
-    min?: number
-    max?: number
-    matches?: RegExp
-    isUpperCase?: boolean
-    isLowerCase?: boolean
-    withSurrogatePairs?: boolean
-    email?: boolean
-    url?: boolean
-    isTrimmed?: boolean
-    date?: boolean
-    checkIsUnique?: () => Promise<void | Response | any>
-    [Symbol.iterator](): Generator
 }

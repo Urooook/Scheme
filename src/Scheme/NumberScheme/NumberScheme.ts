@@ -1,8 +1,11 @@
-import {ValuesObjectNumberElementType} from "./AbstracrScheme";
+import {ValuesObjectNumberElementType} from "../AbstracrScheme";
+import {Optional} from "../types/types";
+import {NumberSchemeObjectType} from "./numberTypes";
 
 export default class NumberScheme {
     rulesObj: NumberSchemeObjectType = {
         type: 'number',
+        optional: false,
         *[Symbol.iterator](): Generator<ValuesObjectNumberElementType> {
             const keys = Object.keys(this);
             for(const key of keys) {
@@ -14,9 +17,13 @@ export default class NumberScheme {
         },
     };
 
-    constructor(obj?: NumberSchemeObjectType) {
+    constructor(obj?: NumberSchemeObjectType | Optional) {
         if(obj){
-            this.rulesObj = obj
+            this.rulesObj = {
+                ...this.rulesObj,
+                ...obj
+            }
+            // console.log('this.rules', this.rulesObj)
         }
     }
 
@@ -228,22 +235,4 @@ export default class NumberScheme {
            return new NumberScheme(this.rulesObj)
        }
     }
-}
-
-export type PartialNumberScheme = Record<string, NumberScheme> & {
-    [Symbol.iterator](): Generator<ValuesObjectNumberElementType>
-}
-export type NumberSchemeObjectType = {
-    type: 'number'
-    min?: number
-    max?: number
-    notOneOf?: number[]
-    positive?: boolean
-    negative?: boolean
-    moreThen?: number
-    lessThen?: number
-    isInteger?: boolean
-    isFloat?: boolean
-    checkIsUnique?: () => Promise<void | Response | any>
-    [Symbol.iterator](): Generator
 }
