@@ -13,4 +13,12 @@ max(val: number, realValue?: number): number | NumberScheme
 ```ts
 notOneOf(value: number[], realValue?: number): number | NumberScheme
 ``` 
+- Позитивное ли число
+```ts
+positive(realValue?: number): number | NumberScheme
+```
+- Отрицательное ли число
+```ts
+negative(realValue?: number): number | NumberScheme
+```
 
