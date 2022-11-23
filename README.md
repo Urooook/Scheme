@@ -15,7 +15,10 @@ userScheme.validate({
   age: 21
 });
 ```
-### Create
+### Create:
+Метод класса Scheme, который создает правила для валидации данных. Принимает объект с данными и правилами
+### Validate:
+Метод класса Scheme, который проверяет переданные данные на соответствие правилам, заданным в create
 ## Типы данных для валидации:
 - number() - Возвращает класс [NumberScheme](https://github.com/Urooook/Scheme/tree/main/src/Scheme/NumberScheme)
 - string() - Возвращает класс [StringScheme](https://github.com/Urooook/Scheme/tree/main/src/Scheme/StringScheme)
