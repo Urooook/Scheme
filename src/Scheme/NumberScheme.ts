@@ -14,7 +14,7 @@ export default class NumberScheme {
         },
     };
 
-    constructor(obj?: any) {
+    constructor(obj?: NumberSchemeObjectType) {
         if(obj){
             this.rulesObj = obj
         }
@@ -212,13 +212,13 @@ export default class NumberScheme {
            return new Promise((resolve) => {
                func().then((data) => resolve(data));
            }).then((res) => {
-               console.log('res2', res)
+               console.log('res3', res)
                if(Boolean(res) === true){
-                   return true;
+                   return realValue;
                } else {
                    throw new Error('Value is not unique')
                }
-           }).catch((error) => console.log(error));
+           }).finally(() => new NumberScheme());
        } else {
            this.rulesObj = {
                ...this.rulesObj,
