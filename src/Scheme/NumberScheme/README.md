@@ -21,4 +21,12 @@ positive(realValue?: number): number | NumberScheme
 ```ts
 negative(realValue?: number): number | NumberScheme
 ```
+- Число больше чем
+```ts
+moreThen(val: number, realValue?: number): number | NumberScheme {
+```
+- Число менее чем
+```ts
+lessThen(val: number, realValue?: number): number | NumberScheme {
+```
 
