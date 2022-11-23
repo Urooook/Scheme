@@ -15,3 +15,5 @@ userScheme.validate({
   age: 21
 });
 ```
+## Типы данных для валидации:
+- number() - Возвращает класс NumberScheme
