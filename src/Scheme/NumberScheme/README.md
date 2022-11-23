@@ -1,3 +1,6 @@
 # NumberScheme
 NumberScheme - это класс для валидации числовых данных. 
 Ниже представлены методы этого класса:
+- min(val: number, realValue?: number): number | NumberScheme - Для установки минимального порога
+- max(val: number, realValue?: number): number | NumberScheme - Для установки максимального порога
+- notOneOf(value: number[], realValue?: number): number | NumberScheme - Для проверкивходит ли заданное число в массив
