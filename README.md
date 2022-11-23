@@ -41,11 +41,13 @@ const userScheme = scheme.create({
 }).isLowerCase(),
     val: scheme.boolean().isFalse()
 });
+
 const a = new Set();
 a.add('bla');
 a.add('fla');
 a.add('ala');
-a.add([1,2,3])
+a.add([1,2,3]);
+
 userScheme.validate({
      age: 23,
      name: 'kot@sd.ru',
