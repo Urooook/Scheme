@@ -15,6 +15,7 @@ userScheme.validate({
   age: 21
 });
 ```
+### Create
 ## Типы данных для валидации:
 - number() - Возвращает класс [NumberScheme](https://github.com/Urooook/Scheme/tree/main/src/Scheme/NumberScheme)
 - string() - Возвращает класс [StringScheme](https://github.com/Urooook/Scheme/tree/main/src/Scheme/StringScheme)
