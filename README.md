@@ -16,4 +16,4 @@ userScheme.validate({
 });
 ```
 ## Типы данных для валидации:
-- number() - Возвращает класс NumberScheme
+- number() - Возвращает класс [NumberScheme](https://github.com/Urooook/CSFrontend/tree/main/HW5/src)
