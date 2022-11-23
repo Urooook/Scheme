@@ -7,7 +7,7 @@ min(val: number, realValue?: number): number | NumberScheme
 ```
 - Для установки максимального порога
 ```ts
-- max(val: number, realValue?: number): number | NumberScheme
+max(val: number, realValue?: number): number | NumberScheme
 ```
 - Для проверки входит ли заданное число в массив
 ```ts
