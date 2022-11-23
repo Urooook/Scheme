@@ -74,3 +74,7 @@ userScheme.validate({
     // ggp: 6,
 })
      .then((res) => console.log('Then', res));
+
+// new Promise((resolve) => {
+//     resolve(new BooleanScheme().isTrue(false));
+// }).then((res) => console.log('qqqq', res))
