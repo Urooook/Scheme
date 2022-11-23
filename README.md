@@ -20,5 +20,6 @@ userScheme.validate({
 - string() - Возвращает класс [StringScheme](https://github.com/Urooook/Scheme/tree/main/src/Scheme/StringScheme)
 - iterable() - Возвращает класс [IterableScheme](https://github.com/Urooook/Scheme/tree/main/src/Scheme/IterableScheme)
 - boolean() - Возвращает класс [BooleanScheme](https://github.com/Urooook/Scheme/tree/main/src/Scheme/BooleanScheme)
+- optional() - ВОзвращает класс Scheme. Говорит о том, что значение не обязательное и его можно не прокидывать в validate
 
 
