@@ -5,9 +5,9 @@
 const scheme = new Scheme();
 
 const userScheme = scheme.create({
-  name: sheme.string.min(5).max(20).check(isUnique /* Функция возвращает промис */),
-  age: scheme.number.min(10).max(90),
-  desc: scheme.optional.string.max(200)
+  name: sheme.string().min(5).max(20).check(isUnique /* Функция возвращает промис */),
+  age: scheme.number().min(10).max(90),
+  desc: scheme.optional().string().max(200)
 });
 
 userScheme.validate({
