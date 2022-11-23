@@ -23,10 +23,18 @@ negative(realValue?: number): number | NumberScheme
 ```
 - Число больше чем
 ```ts
-moreThen(val: number, realValue?: number): number | NumberScheme {
+moreThen(val: number, realValue?: number): number | NumberScheme 
 ```
 - Число менее чем
 ```ts
-lessThen(val: number, realValue?: number): number | NumberScheme {
+lessThen(val: number, realValue?: number): number | NumberScheme 
+```
+- Целое ли число
+```ts
+isInteger(realValue?: number): number | NumberScheme 
+```
+- Нецелое число 
+```ts
+isFloat(realValue?: number): number | NumberScheme 
 ```
 
