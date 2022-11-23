@@ -21,6 +21,10 @@ url(realValue?: string): string | StringScheme
 ```ts
 checkIsUnique(func: () => Promise<void | Response | any>, realValue?: string): Promise<any> | NumberScheme 
 ```
+- Соответствует ли строка переданному регулярному выражению:
+```ts
+matches(regular: RegExp, realValue?: string): string | StringScheme
+```
 - Для установки минимального порога длины строки
 ```ts
 min(val: number, realValue?: string): string | StringScheme
@@ -29,3 +33,16 @@ min(val: number, realValue?: string): string | StringScheme
 ```ts
 max(val: number, realValue?: string): string | StringScheme
 ```
+- Проверка на верхний регистр:
+```ts
+isUpperCase(realValue?: string): string | StringScheme
+```
+- Проверка на нижний регистр:
+```ts
+isLowerCase(realValue?: string): string | StringScheme
+```
+- Есть ли в строке лишние проблемы:
+```ts
+isTrimmed(realValue?: string): string | StringScheme
+```
+
